@@ -803,8 +803,6 @@ button.link.link-back {
     background: #fff;
     border: 1px solid #aaa;
     position: absolute;
-    top: 100px;
-    left: 10px;
     border-radius: 4px;
     box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
 }
@@ -846,4 +844,9 @@ button.link.link-back {
 
 .map-control-form .button + .button {
     margin-left: 1em;
+}
+
+.map-control-lat-long {
+    top: 64px;
+    left: 10px;
 }

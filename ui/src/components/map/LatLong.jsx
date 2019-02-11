@@ -6,14 +6,18 @@ import { LocationPropType } from "../../CustomPropTypes"
 import * as actions from "../../actions/map"
 
 const LatLong = ({ location, setLocation }) => {
-    const { latitude: lat = "", longitude: long = "" } = location || {}
+    const hasGeolocation = navigator && "geolocation" in navigator
+
+    const { latitude: lat = "", longitude: long = "" } = location
+    console.log("location is", location, lat, long)
     const [isOpen, setIsOpen] = useState(false)
     const [latitude, setLatitude] = useState(lat)
     const [isLatValid, setIsLatValid] = useState(true)
     const [longitude, setLongitude] = useState(long)
     const [isLongValid, setIsLongValid] = useState(true)
 
-    // TODO: validation
+    console.log("latitude is", latitude)
+
     const handleLatitudeChange = ({ target: { value } }) => {
         setLatitude(value)
         setIsLatValid(value === "" || Math.abs(parseFloat(value)) < 89)
@@ -41,8 +45,24 @@ const LatLong = ({ location, setLocation }) => {
         setLocation({})
     }
 
+    // TODO: spinner and error handling
+    const handleGetMyLocation = () => {
+        setIsOpen(false)
+        navigator.geolocation.getCurrentPosition(({ coords }) => {
+            setLatitude(coords.latitude)
+            setLongitude(coords.longitude)
+            setIsLatValid(true)
+            setIsLongValid(true)
+            setLocation({
+                latitude: coords.latitude,
+                longitude: coords.longitude,
+                timestamp: new Date().getTime()
+            })
+        })
+    }
+
     return (
-        <div className={`map-control ${isOpen ? "is-open" : ""}`}>
+        <div className={`map-control map-control-lat-long ${isOpen ? "is-open" : ""}`}>
             <div
                 className="fas fa-crosshairs is-size-5 map-control-toggle"
                 onClick={() => setIsOpen(!isOpen)}
@@ -79,6 +99,12 @@ const LatLong = ({ location, setLocation }) => {
                         </div>
 
                         <div className="flex-container flex-justify-end map-control-form-row">
+                            {hasGeolocation ? (
+                                <button type="button" className="button is-small link" onClick={handleGetMyLocation}>
+                                    <i className="fas fa-location-arrow" />
+                                    &nbsp; use my location
+                                </button>
+                            ) : null}
                             <button type="button" className="button is-small is-danger" onClick={handleClear}>
                                 clear
                             </button>
