@@ -7,16 +7,14 @@ import * as actions from "../../actions/map"
 
 const LatLong = ({ location, setLocation }) => {
     const hasGeolocation = navigator && "geolocation" in navigator
-
     const { latitude: lat = "", longitude: long = "" } = location
-    console.log("location is", location, lat, long)
+
     const [isOpen, setIsOpen] = useState(false)
     const [latitude, setLatitude] = useState(lat)
     const [isLatValid, setIsLatValid] = useState(true)
     const [longitude, setLongitude] = useState(long)
     const [isLongValid, setIsLongValid] = useState(true)
-
-    console.log("latitude is", latitude)
+    const [isLocationPending, setIsLocationPending] = useState(false)
 
     const handleLatitudeChange = ({ target: { value } }) => {
         setLatitude(value)
@@ -47,24 +45,38 @@ const LatLong = ({ location, setLocation }) => {
 
     // TODO: spinner and error handling
     const handleGetMyLocation = () => {
+        // set spinner
+        setIsLocationPending(true)
         setIsOpen(false)
-        navigator.geolocation.getCurrentPosition(({ coords }) => {
-            setLatitude(coords.latitude)
-            setLongitude(coords.longitude)
-            setIsLatValid(true)
-            setIsLongValid(true)
-            setLocation({
-                latitude: coords.latitude,
-                longitude: coords.longitude,
-                timestamp: new Date().getTime()
-            })
-        })
+        navigator.geolocation.getCurrentPosition(
+            ({ coords }) => {
+                setLatitude(coords.latitude)
+                setLongitude(coords.longitude)
+                setIsLatValid(true)
+                setIsLongValid(true)
+                setLocation({
+                    latitude: coords.latitude,
+                    longitude: coords.longitude,
+                    timestamp: new Date().getTime()
+                })
+                setIsLocationPending(false)
+            },
+            error => {
+                console.error(error)
+                setIsLocationPending(false)
+            },
+            {
+                enableHighAccuracy: false,
+                maximumAge: 0,
+                timeout: 6000
+            }
+        )
     }
 
     return (
         <div className={`map-control map-control-lat-long ${isOpen ? "is-open" : ""}`}>
             <div
-                className="fas fa-crosshairs is-size-5 map-control-toggle"
+                className={`fas fa-crosshairs is-size-5 map-control-toggle ${isLocationPending ? "fa-spin" : ""}`}
                 onClick={() => setIsOpen(!isOpen)}
                 title="Go to latitude / longitude"
             />
