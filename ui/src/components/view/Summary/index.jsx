@@ -13,12 +13,13 @@ import SummaryUnitDetails from "./SummaryUnitDetails"
 
 import summaryStats from "../../../data/summary_stats.json"
 
-const Summary = ({ selectedFeature, system, type, selectFeature }) => {
+const Summary = ({ selectedFeature, system, type, selectFeature, setBounds }) => {
     const { dams, barriers, miles } = summaryStats.southeast
     const total = type === "dams" ? dams : barriers
 
     const handleSearchSelect = (id, bbox) => {
-        selectFeature(id)
+        // selectFeature(id)
+        setBounds(bbox)
     }
 
     return (
@@ -69,7 +70,8 @@ Summary.propTypes = {
     selectedFeature: FeaturePropType,
     type: PropTypes.string.isRequired,
     system: PropTypes.string.isRequired,
-    selectFeature: PropTypes.func.isRequired
+    selectFeature: PropTypes.func.isRequired,
+    setBounds: PropTypes.func.isRequired
 }
 
 Summary.defaultProps = {

@@ -1,3 +1,5 @@
+export { setBounds } from "./map"
+
 export const SUMMARY_SET_SYSTEM = "SUMMARY_SET_SYSTEM"
 export const setSystem = system => ({
     type: SUMMARY_SET_SYSTEM,

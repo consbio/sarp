@@ -6,8 +6,6 @@ import geoViewport from "@mapbox/geo-viewport"
 import mapboxgl from "mapbox-gl"
 import "mapbox-gl/dist/mapbox-gl.css"
 
-import { LocationPropType } from "../../CustomPropTypes"
-
 import LatLong from "./LatLong"
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN || "" // REQUIRED: this must be present in .env file
@@ -141,7 +139,8 @@ const mapStateToProps = globalState => {
     const state = globalState.get("map")
 
     return {
-        location: state.get("location")
+        location: state.get("location"),
+        bounds: state.get("bounds")
     }
 }
 

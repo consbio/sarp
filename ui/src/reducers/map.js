@@ -1,6 +1,6 @@
 import { Map, List } from "immutable"
 
-import { SET_LOCATION } from "../actions/map"
+import { SET_BOUNDS, SET_LOCATION } from "../actions/map"
 import { SARP_BOUNDS } from "../constants"
 
 const initialState = Map({
@@ -10,6 +10,9 @@ const initialState = Map({
 
 export const reducer = (state = initialState, { type, payload = {} }) => {
     switch (type) {
+        case SET_BOUNDS: {
+            return state.set("bounds", List(payload.bounds))
+        }
         case SET_LOCATION: {
             return state.set("location", Map(payload.location))
         }
