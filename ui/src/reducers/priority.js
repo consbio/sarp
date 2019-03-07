@@ -19,11 +19,11 @@ import {
     PRIORITY_FETCH_ERROR,
     SET_TIER_THRESHOLD
 } from "../actions/priority"
-import { SARP_BOUNDS } from "../components/map/config"
+import { SARP_BOUNDS } from "../constants"
 
 const initialState = Map({
     mode: "start", // mode or step in selection process: "select", "filter", "results"
-    bounds: SARP_BOUNDS, // SARP bounds
+    bounds: List(SARP_BOUNDS), // SARP bounds
     prevBounds: List(), // push previous bounds here
     scenario: "ncwc", // nc, wc, ncwc
     layer: null, // HUC*, ECO*, State

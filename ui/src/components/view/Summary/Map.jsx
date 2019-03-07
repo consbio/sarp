@@ -8,8 +8,10 @@ import Legend from "../../map/Legend"
 import { hexToRGB } from "../../../utils/colors"
 import { FeaturePropType } from "../../../CustomPropTypes"
 
-import { TILE_HOST } from '../../../config'
-import { COLORS, LAYER_CONFIG, SYSTEMS } from "../../map/config"
+import { TILE_HOST } from "../../../config"
+import { SYSTEMS } from "../../../constants"
+import { COLORS, LAYER_CONFIG } from "../../map/config"
+
 import Map from "../../map/index"
 
 class SummaryMap extends Component {
@@ -327,7 +329,7 @@ const mapStateToProps = globalState => {
     const state = globalState.get("summary")
 
     return {
-        bounds: state.get("bounds"),
+        bounds: globalState.get("map").get("bounds"),
         system: state.get("system"),
         type: state.get("type"),
         selectedFeature: state.get("selectedFeature")

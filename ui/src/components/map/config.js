@@ -1,8 +1,3 @@
-import { List } from "immutable"
-
-// Bounds around all selected HUC6s
-export const SARP_BOUNDS = List([-107.87000919, 17.62370026, -64.5126611, 44.26093852])
-
 // from colorbrewer
 export const COUNT_COLORS = [
     "#ffffcc",
@@ -52,18 +47,6 @@ export const TIER_COLORS = [
 
 // from colorbrewer: http://colorbrewer2.org/#type=sequential&scheme=BuPu&n=5
 export const PRIORITY_TIER_COLORS = ["#edf8fb", "#b3cde3", "#8c96c6", "#8856a7", "#810f7c"].reverse()
-
-export const SYSTEMS = {
-    ADM: "State / County",
-    HUC: "Hydrologic unit",
-    ECO: "Ecoregion"
-}
-
-export const SCENARIOS = {
-    nc: "Network Connnectivity",
-    wc: "Watershed Condition",
-    ncwc: "Combined"
-}
 
 export const LAYER_CONFIG = [
     {

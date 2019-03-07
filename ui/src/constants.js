@@ -1,4 +1,4 @@
-export const stateFIPS = {
+export const STATE_FIPS = {
     "12": "Florida",
     "37": "North Carolina",
     "22": "Louisiana",
@@ -177,3 +177,24 @@ export const CONNECTIVITY_TEAMS = {
         }
     }
 }
+
+export const SYSTEMS = {
+    ADM: "State / County",
+    HUC: "Hydrologic unit",
+    ECO: "Ecoregion"
+}
+
+export const SYSTEM_UNITS = {
+    ADM: ["State", "County"],
+    HUC: ["HUC6", "HUC8", "HUC12"],
+    ECO: ["ECO3", "ECO4"]
+}
+
+export const SCENARIOS = {
+    nc: "Network Connectivity",
+    wc: "Watershed Condition",
+    ncwc: "Combined"
+}
+
+// Bounds around all selected HUC6s
+export const SARP_BOUNDS = [-107.87000919, 17.62370026, -64.5126611, 44.26093852]

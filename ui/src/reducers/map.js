@@ -1,10 +1,10 @@
-import { Map } from "immutable"
+import { Map, List } from "immutable"
 
 import { SET_LOCATION } from "../actions/map"
-// import { SARP_BOUNDS } from "../components/map/config"
+import { SARP_BOUNDS } from "../constants"
 
 const initialState = Map({
-    // bounds: SARP_BOUNDS, // SARP bounds
+    bounds: List(SARP_BOUNDS),
     location: Map() // {latitude, longitude, timestamp}
 })
 

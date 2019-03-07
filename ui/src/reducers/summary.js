@@ -1,11 +1,8 @@
-import { List, Map } from "immutable"
+import { Map } from "immutable"
 
 import { SUMMARY_SET_SYSTEM, SUMMARY_SELECT_FEATURE, SUMMARY_SET_TYPE } from "../actions/summary"
-import { SARP_BOUNDS } from "../components/map/config"
 
 const initialState = Map({
-    bounds: SARP_BOUNDS, // SARP bounds
-    prevBounds: List(), // push previous bounds here
     system: "HUC", // HUC, ECO, ADMIN. null means SARP region
     type: "dams", // dams, barriers
     selectedFeature: null // selected unit properties {id: <>, ...}

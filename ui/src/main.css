@@ -116,6 +116,11 @@ button:focus {
     margin: 0 !important;
 }
 
+.no-wrap {
+    white-space: nowrap;
+    word-wrap: none;
+}
+
 .info-box {
     border-radius: 6px;
     background: #e0f2fb;
@@ -601,6 +606,16 @@ button.link.link-back {
     margin-left: 0.5em;
     padding-left: 0.5em;
     border-left: 1px solid #aaa;
+}
+
+#UnitSearch li {
+    padding: 0.5em;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    line-height: 1.2;
+}
+#UnitSearch li:hover {
+    background: rgb(210, 236, 249);
 }
 
 .prioritization-details {

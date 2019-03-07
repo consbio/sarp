@@ -8,13 +8,18 @@ import { formatNumber } from "../../../utils/format"
 
 import SummaryMap from "./Map"
 import Sidebar from "../../Sidebar"
+import UnitSearch from "../../UnitSearch"
 import SummaryUnitDetails from "./SummaryUnitDetails"
 
 import summaryStats from "../../../data/summary_stats.json"
 
-const Summary = ({ selectedFeature, type, selectFeature }) => {
+const Summary = ({ selectedFeature, system, type, selectFeature }) => {
     const { dams, barriers, miles } = summaryStats.southeast
     const total = type === "dams" ? dams : barriers
+
+    const handleSearchSelect = (id, bbox) => {
+        selectFeature(id)
+    }
 
     return (
         <React.Fragment>
@@ -27,7 +32,14 @@ const Summary = ({ selectedFeature, type, selectFeature }) => {
                             <br />
                             <br />
                             Click on a summary unit the map for more information about that area.
+                            <br />
+                            <br />
                         </p>
+
+                        <div>
+                            <UnitSearch system={system} onSelect={handleSearchSelect} />
+                        </div>
+
                         <p className="has-text-grey">
                             <br />
                             <br />
@@ -56,6 +68,7 @@ const Summary = ({ selectedFeature, type, selectFeature }) => {
 Summary.propTypes = {
     selectedFeature: FeaturePropType,
     type: PropTypes.string.isRequired,
+    system: PropTypes.string.isRequired,
     selectFeature: PropTypes.func.isRequired
 }
 

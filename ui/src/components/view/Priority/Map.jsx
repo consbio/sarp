@@ -10,6 +10,7 @@ import { FeaturePropType } from "../../../CustomPropTypes"
 import { recordsToGeoJSON } from "../../../utils/geojson"
 
 import { TILE_HOST } from "../../../config"
+import { SCENARIOS } from '../../../constants'
 import {
     maskFill,
     maskOutline,
@@ -27,7 +28,6 @@ import {
 } from "./styles"
 import { LAYER_CONFIG } from "./config"
 import Map from "../../map/index"
-import { SCENARIOS } from "../../map/config"
 
 class PriorityMap extends Component {
     constructor() {
