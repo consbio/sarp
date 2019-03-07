@@ -10,16 +10,22 @@ import SummaryMap from "./Map"
 import Sidebar from "../../Sidebar"
 import UnitSearch from "../../UnitSearch"
 import SummaryUnitDetails from "./SummaryUnitDetails"
+import { LAYER_ZOOM } from "../../map/config"
 
 import summaryStats from "../../../data/summary_stats.json"
 
-const Summary = ({ selectedFeature, system, type, selectFeature, setBounds }) => {
+const Summary = ({ selectedFeature, system, type, selectFeature, setCenter }) => {
     const { dams, barriers, miles } = summaryStats.southeast
     const total = type === "dams" ? dams : barriers
 
-    const handleSearchSelect = (id, bbox) => {
+    const handleSearchSelect = (id, bbox, layer) => {
         // selectFeature(id)
-        setBounds(bbox)
+
+        setCenter({
+            latitude: (bbox[3] - bbox[1]) / 2 + bbox[1],
+            longitude: (bbox[2] - bbox[0]) / 2 + bbox[0],
+            zoom: LAYER_ZOOM[layer]
+        })
     }
 
     return (
@@ -71,7 +77,7 @@ Summary.propTypes = {
     type: PropTypes.string.isRequired,
     system: PropTypes.string.isRequired,
     selectFeature: PropTypes.func.isRequired,
-    setBounds: PropTypes.func.isRequired
+    setCenter: PropTypes.func.isRequired
 }
 
 Summary.defaultProps = {

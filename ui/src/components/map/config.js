@@ -267,3 +267,14 @@ export const LAYER_CONFIG = [
         }
     }
 ]
+
+// Ideal zoom level for each layer, e.g., when fitting bounds to a selected feature
+export const LAYER_ZOOM = {
+    State: 5,
+    County: 7,
+    HUC6: 5,
+    HUC8: 7,
+    HUC12: 9,
+    ECO3: 4,
+    ECO4: 7
+}

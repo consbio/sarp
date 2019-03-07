@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import PropTypes from "prop-types"
 
 import { SYSTEMS, SYSTEM_UNITS, STATE_FIPS } from "../constants"
@@ -6,23 +6,27 @@ import data from "../data/unit_bounds.json"
 
 // merge state name in
 data.State.forEach(s => {
-    s.name = STATE_FIPS[s.id].toLowerCase()
+    s.name = STATE_FIPS[s.id]
+    s.layer = "State"
 })
 
 // expand county name to include " County"
 data.County.forEach(c => {
     c.name += " County"
+    c.layer = "County"
 })
 
 // for HUC and ECO units, add prefix for ID
 SYSTEM_UNITS.HUC.forEach(layer => {
     data[layer].forEach(item => {
         item.prefix = layer
+        item.layer = layer
     })
 })
 SYSTEM_UNITS.ECO.forEach(layer => {
     data[layer].forEach(item => {
         item.prefix = layer
+        item.layer = layer
     })
 })
 
@@ -47,7 +51,7 @@ const ListItem = ({ id, name, state, prefix, showID, onClick }) => {
                 )}
             </div>
 
-            {stateLabels && <div>{stateLabels}</div>}
+            {stateLabels && <div className="has-text-grey-dark">{stateLabels}</div>}
         </li>
     )
 }
@@ -68,7 +72,19 @@ ListItem.defaultProps = {
 }
 
 const UnitSearch = ({ system, layer, onSelect }) => {
+    const showID = system !== "ADM"
     const [{ value, results }, setState] = useState({ value: "", results: [] })
+
+    // reset results on props change
+    useEffect(
+        () => {
+            setState({
+                value: "",
+                results: []
+            })
+        },
+        [system]
+    )
 
     let units = []
     if (layer !== null) {
@@ -88,18 +104,17 @@ const UnitSearch = ({ system, layer, onSelect }) => {
         }
 
         // Filter out the top 10
-        const expr = new RegExp(value, "gi")
-        const filtered = units.filter(item => item.name.search(expr) !== -1 || item.id.search(expr) !== -1)
+        const expr = new RegExp(inputValue, "gi")
+        const filtered = units.filter(item => item.name.search(expr) !== -1 || (showID && item.id.search(expr) !== -1))
         setState({ value: inputValue, results: filtered.slice(0, 10) })
     }
 
-    const showID = system !== "ADM"
     const searchLabel = `${SYSTEMS[system].toLowerCase()} name${system !== "ADM" ? " or ID" : ""}`
 
     return (
         <div id="UnitSearch">
             <h5 className="is-size-5">Search for {SYSTEMS[system].toLowerCase()}:</h5>
-            <input className="input" type="text" placeholder={searchLabel} onChange={handleChange} />
+            <input className="input" type="text" placeholder={searchLabel} value={value} onChange={handleChange} />
             {value !== "" && (
                 <>
                     {results.length > 0 ? (
@@ -109,7 +124,7 @@ const UnitSearch = ({ system, layer, onSelect }) => {
                                     key={item.id}
                                     {...item}
                                     showID={showID}
-                                    onClick={() => onSelect(item.id, item.bbox)}
+                                    onClick={() => onSelect(item.id, item.bbox, item.layer)}
                                 />
                             ))}
                         </ul>

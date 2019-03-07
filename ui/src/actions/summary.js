@@ -1,4 +1,4 @@
-export { setBounds } from "./map"
+export { setBounds, setCenter } from "./map"
 
 export const SUMMARY_SET_SYSTEM = "SUMMARY_SET_SYSTEM"
 export const setSystem = system => ({
