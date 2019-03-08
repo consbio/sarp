@@ -1,4 +1,4 @@
-import { Map, List } from "immutable"
+import { Map, List, fromJS } from "immutable"
 
 import { SET_BOUNDS, SET_CENTER, SET_LOCATION } from "../actions/map"
 import { SARP_BOUNDS } from "../constants"
@@ -6,7 +6,8 @@ import { SARP_BOUNDS } from "../constants"
 const initialState = Map({
     bounds: List(SARP_BOUNDS),
     center: Map(), // { latitude, longitude, zoom }
-    location: Map() // {latitude, longitude, timestamp}
+    location: Map(), // {latitude, longitude, timestamp}
+    searchFeature: Map() // {id, layer, bbox, maxZoom=null}
 })
 
 export const reducer = (state = initialState, { type, payload = {} }) => {

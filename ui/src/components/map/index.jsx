@@ -72,7 +72,6 @@ class Map extends React.Component {
 
         if (!center.equals(prevCenter)) {
             const { latitude = null, longitude = null, zoom = map.getZoom() } = center.toJS()
-            console.log("update center", latitude, longitude)
             if (latitude !== null && longitude !== null) {
                 map.flyTo({ center: [longitude, latitude], zoom })
             }
@@ -130,7 +129,7 @@ Map.propTypes = {
     location: ImmutablePropTypes.mapContains({
         latitude: PropTypes.number,
         longitude: PropTypes.number
-    }),
+    }).isRequired,
     baseStyle: PropTypes.string,
     bounds: ImmutablePropTypes.listOf(PropTypes.number), // example: [-180, -86, 180, 86]
     center: ImmutablePropTypes.mapContains({
@@ -142,7 +141,6 @@ Map.propTypes = {
 }
 
 Map.defaultProps = {
-    location: null,
     baseStyle: "light-v9",
     bounds: null,
     center: null,

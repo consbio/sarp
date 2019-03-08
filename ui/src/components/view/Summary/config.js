@@ -20,34 +20,6 @@ export const COLORS = {
     }
 }
 
-// there are 20 tiers
-// Viridis_20 from palettable
-export const TIER_COLORS = [
-    "#440154",
-    "#481467",
-    "#482677",
-    "#453781",
-    "#3F4788",
-    "#39558C",
-    "#32648E",
-    "#2D718E",
-    "#287D8E",
-    "#238A8D",
-    "#1F968B",
-    "#20A386",
-    "#29AF7F",
-    "#3BBB75",
-    "#56C667",
-    "#73D056",
-    "#95D840",
-    "#B8DE29",
-    "#DDE318",
-    "#FDE725"
-] // TODO: may need to be reversed
-
-// from colorbrewer: http://colorbrewer2.org/#type=sequential&scheme=BuPu&n=5
-export const PRIORITY_TIER_COLORS = ["#edf8fb", "#b3cde3", "#8c96c6", "#8856a7", "#810f7c"].reverse()
-
 export const LAYER_CONFIG = [
     {
         id: "HUC6",
@@ -271,10 +243,10 @@ export const LAYER_CONFIG = [
 // Ideal zoom level for each layer, e.g., when fitting bounds to a selected feature
 export const LAYER_ZOOM = {
     State: 5,
-    County: 7,
+    County: 24,
     HUC6: 5,
-    HUC8: 7,
-    HUC12: 9,
+    HUC8: 8,
+    HUC12: 24,
     ECO3: 4,
-    ECO4: 7
+    ECO4: 24
 }

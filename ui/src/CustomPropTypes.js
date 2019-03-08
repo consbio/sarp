@@ -6,6 +6,13 @@ export const FeaturePropType = ImmutablePropTypes.mapContains({
     id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired
 })
 
+export const SearchFeaturePropType = ImmutablePropTypes.mapContains({
+    id: PropTypes.string,
+    layer: PropTypes.string,
+    bbox: ImmutablePropTypes.listOf(PropTypes.number),
+    maxZoom: PropTypes.number
+})
+
 export const BarrierPropType = PropTypes.shape({
     name: PropTypes.string,
     County: PropTypes.string,

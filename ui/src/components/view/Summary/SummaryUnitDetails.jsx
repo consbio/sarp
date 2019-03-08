@@ -4,7 +4,7 @@ import PropTypes from "prop-types"
 import { FeaturePropType } from "../../../CustomPropTypes"
 import { formatNumber, formatPercent } from "../../../utils/format"
 
-import { LAYER_CONFIG } from "../../map/config"
+import { LAYER_CONFIG } from "./config"
 import { STATE_FIPS, CONNECTIVITY_TEAMS } from "../../../constants"
 
 const SummaryUnitDetails = ({ selectedFeature, type, total, meanConnectedMiles, onClose }) => {

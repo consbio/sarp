@@ -604,15 +604,6 @@ export default connect(
 //     }
 // }
 
-// const colors = TIER_COLORS.reduce((out, color, i) => out.concat([i, color]), [])
-// const maxRadius = 20
-// const minRadius = 6
-// const numSizes = TIER_COLORS.length
-// const increment = (maxRadius - minRadius) / (numSizes - 1)
-// const sizes = Array.from(Array(numSizes), (_, i) => numSizes - increment * i).reduce(
-//     (out, size, i) => out.concat([i, size]),
-//     []
-// )
 
 // Show priority dams
 // map.addLayer({

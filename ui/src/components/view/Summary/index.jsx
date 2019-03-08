@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import PropTypes from "prop-types"
 import { connect } from "react-redux"
 
@@ -10,22 +10,30 @@ import SummaryMap from "./Map"
 import Sidebar from "../../Sidebar"
 import UnitSearch from "../../UnitSearch"
 import SummaryUnitDetails from "./SummaryUnitDetails"
-import { LAYER_ZOOM } from "../../map/config"
+import { LAYER_ZOOM } from "./config"
 
 import summaryStats from "../../../data/summary_stats.json"
 
-const Summary = ({ selectedFeature, system, type, selectFeature, setCenter }) => {
+const Summary = ({ selectedFeature, system, type, selectFeature, setSearchFeature }) => {
+    const [searchValue, setSearchValue] = useState("")
+
+    useEffect(
+        () => {
+            setSearchValue("")
+        },
+        [system]
+    )
+
     const { dams, barriers, miles } = summaryStats.southeast
     const total = type === "dams" ? dams : barriers
 
-    const handleSearchSelect = (id, bbox, layer) => {
-        // selectFeature(id)
+    const handleSearchChange = value => {
+        setSearchValue(value)
+    }
 
-        setCenter({
-            latitude: (bbox[3] - bbox[1]) / 2 + bbox[1],
-            longitude: (bbox[2] - bbox[0]) / 2 + bbox[0],
-            zoom: LAYER_ZOOM[layer]
-        })
+    const handleSearchSelect = item => {
+        const { layer } = item
+        setSearchFeature(item, LAYER_ZOOM[layer])
     }
 
     return (
@@ -44,7 +52,12 @@ const Summary = ({ selectedFeature, system, type, selectFeature, setCenter }) =>
                         </p>
 
                         <div>
-                            <UnitSearch system={system} onSelect={handleSearchSelect} />
+                            <UnitSearch
+                                system={system}
+                                value={searchValue}
+                                onChange={handleSearchChange}
+                                onSelect={handleSearchSelect}
+                            />
                         </div>
 
                         <p className="has-text-grey">
@@ -77,7 +90,7 @@ Summary.propTypes = {
     type: PropTypes.string.isRequired,
     system: PropTypes.string.isRequired,
     selectFeature: PropTypes.func.isRequired,
-    setCenter: PropTypes.func.isRequired
+    setSearchFeature: PropTypes.func.isRequired
 }
 
 Summary.defaultProps = {

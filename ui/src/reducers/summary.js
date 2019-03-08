@@ -1,10 +1,16 @@
-import { Map } from "immutable"
+import { fromJS, Map } from "immutable"
 
-import { SUMMARY_SET_SYSTEM, SUMMARY_SELECT_FEATURE, SUMMARY_SET_TYPE } from "../actions/summary"
+import {
+    SUMMARY_SET_SYSTEM,
+    SUMMARY_SELECT_FEATURE,
+    SUMMARY_SET_TYPE,
+    SUMMARY_SET_SEARCH_FEATURE
+} from "../actions/summary"
 
 const initialState = Map({
     system: "HUC", // HUC, ECO, ADMIN. null means SARP region
     type: "dams", // dams, barriers
+    searchFeature: Map(), // {id, layer, bbox, maxZoom=null}
     selectedFeature: null // selected unit properties {id: <>, ...}
 })
 
@@ -22,8 +28,14 @@ export const reducer = (state = initialState, { type, payload = {} }) => {
         case SUMMARY_SET_TYPE: {
             return state.set("type", payload.type)
         }
+        case SUMMARY_SET_SEARCH_FEATURE: {
+            return state.set("searchFeature", fromJS(payload.searchFeature).set("maxZoom", payload.maxZoom))
+        }
         case SUMMARY_SELECT_FEATURE: {
-            return state.set("selectedFeature", payload.selectedFeature)
+            return state.merge({
+                selectedFeature: payload.selectedFeature,
+                searchFeature: Map()
+            })
         }
         default: {
             return state

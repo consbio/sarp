@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React from "react"
 import PropTypes from "prop-types"
 
 import { SYSTEMS, SYSTEM_UNITS, STATE_FIPS } from "../constants"
@@ -7,6 +7,7 @@ import data from "../data/unit_bounds.json"
 // merge state name in
 data.State.forEach(s => {
     s.name = STATE_FIPS[s.id]
+    s.id = s.name
     s.layer = "State"
 })
 
@@ -19,22 +20,26 @@ data.County.forEach(c => {
 // for HUC and ECO units, add prefix for ID
 SYSTEM_UNITS.HUC.forEach(layer => {
     data[layer].forEach(item => {
-        item.prefix = layer
         item.layer = layer
     })
 })
 SYSTEM_UNITS.ECO.forEach(layer => {
     data[layer].forEach(item => {
-        item.prefix = layer
         item.layer = layer
     })
 })
 
-const ListItem = ({ id, name, state, prefix, showID, onClick }) => {
+const PREFIXES = {
+    ECO3: "Level 3",
+    ECO4: "Level 4"
+}
+
+const ListItem = ({ id, name, state, layer, showID, onClick }) => {
     const stateLabels = state
         ? state
             .split(",")
             .map(s => STATE_FIPS[s])
+            .sort()
             .join(", ")
         : ""
 
@@ -45,7 +50,7 @@ const ListItem = ({ id, name, state, prefix, showID, onClick }) => {
                 {showID && (
                     <span className="is-size-7 has-text-grey has-text-weight-normal no-wrap">
                         &nbsp;(
-                        {prefix && `${prefix}: `}
+                        {layer && `${PREFIXES[layer] || layer}: `}
                         {id})
                     </span>
                 )}
@@ -61,52 +66,45 @@ ListItem.propTypes = {
     name: PropTypes.string.isRequired,
     onClick: PropTypes.func.isRequired,
     state: PropTypes.string,
-    prefix: PropTypes.string,
+    layer: PropTypes.string,
     showID: PropTypes.bool
 }
 
 ListItem.defaultProps = {
     state: "",
-    prefix: "",
+    layer: "",
     showID: false
 }
 
-const UnitSearch = ({ system, layer, onSelect }) => {
+const UnitSearch = ({ system, layer, value, onChange, onSelect }) => {
     const showID = system !== "ADM"
-    const [{ value, results }, setState] = useState({ value: "", results: [] })
+    // const [value, setValue] = useState(origValue)
 
     // reset results on props change
-    useEffect(
-        () => {
-            setState({
-                value: "",
-                results: []
-            })
-        },
-        [system]
-    )
-
-    let units = []
-    if (layer !== null) {
-        units = data[layer]
-    } else {
-        units = SYSTEM_UNITS[system].reduce((collector, unit) => collector.concat(data[unit]), [])
-    }
-    window.units = units
+    // useEffect(
+    //     () => {
+    //         setValue("")
+    //     },
+    //     [system]
+    // )
 
     const handleChange = ({ target: { value: inputValue } }) => {
-        if (inputValue === "") {
-            setState({
-                value: inputValue,
-                results: []
-            })
-            return
+        onChange(inputValue)
+    }
+
+    let results = []
+    if (value && value !== "") {
+        let units = []
+        if (layer !== null) {
+            units = data[layer]
+        } else {
+            units = SYSTEM_UNITS[system].reduce((collector, unit) => collector.concat(data[unit]), [])
         }
 
         // Filter out the top 10
-        const expr = new RegExp(inputValue, "gi")
+        const expr = new RegExp(value, "gi")
         const filtered = units.filter(item => item.name.search(expr) !== -1 || (showID && item.id.search(expr) !== -1))
-        setState({ value: inputValue, results: filtered.slice(0, 10) })
+        results = filtered.slice(0, 10)
     }
 
     const searchLabel = `${SYSTEMS[system].toLowerCase()} name${system !== "ADM" ? " or ID" : ""}`
@@ -120,12 +118,7 @@ const UnitSearch = ({ system, layer, onSelect }) => {
                     {results.length > 0 ? (
                         <ul>
                             {results.map(item => (
-                                <ListItem
-                                    key={item.id}
-                                    {...item}
-                                    showID={showID}
-                                    onClick={() => onSelect(item.id, item.bbox, item.layer)}
-                                />
+                                <ListItem key={item.id} {...item} showID={showID} onClick={() => onSelect(item)} />
                             ))}
                         </ul>
                     ) : (
@@ -140,16 +133,17 @@ const UnitSearch = ({ system, layer, onSelect }) => {
 }
 
 UnitSearch.propTypes = {
+    value: PropTypes.string.isRequired,
     system: PropTypes.string.isRequired,
     layer: PropTypes.string,
-    onSelect: PropTypes.func
+    onChange: PropTypes.func.isRequired,
+    onSelect: PropTypes.func.isRequired
 }
 
 UnitSearch.defaultProps = {
-    layer: null,
-    onSelect: (id, bbox) => {
-        console.log(`onSelect ${id} ${bbox}`)
-    }
+    layer: null
+    // value: "",
+    // onSelect: () => {}
 }
 
 export default UnitSearch
