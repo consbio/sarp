@@ -735,7 +735,15 @@ button.link.link-back {
     height: 1rem;
     background: #2c7fb8;
 }
-.histogram .bar.top {
+.histogram .bar + div {
+    color: #7a7a7a;
+}
+
+.histogram .top-tier .histogram-label,
+.histogram .top-tier .bar + div {
+    color: #c51b8a;
+}
+.histogram .top-tier .bar {
     background: #c51b8a;
 }
 
