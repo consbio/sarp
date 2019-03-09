@@ -3,7 +3,7 @@ import ImmutablePropTypes from "react-immutable-proptypes"
 
 // At minimum, a feature must have an id
 export const FeaturePropType = ImmutablePropTypes.mapContains({
-    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 })
 
 export const SearchFeaturePropType = ImmutablePropTypes.mapContains({

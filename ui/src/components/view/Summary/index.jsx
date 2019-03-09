@@ -39,7 +39,7 @@ const Summary = ({ selectedFeature, system, type, selectFeature, setSearchFeatur
     return (
         <React.Fragment>
             <Sidebar>
-                {selectedFeature === null ? (
+                {selectedFeature.isEmpty() ? (
                     <div id="SidebarContent">
                         <p>
                             Across the Southeast, there are at least {formatNumber(dams)} dams, resulting in an average
@@ -74,7 +74,7 @@ const Summary = ({ selectedFeature, system, type, selectFeature, setSearchFeatur
                         total={total}
                         type={type}
                         meanConnectedMiles={miles}
-                        onClose={() => selectFeature(null)}
+                        onClose={() => selectFeature(selectedFeature.clear())}
                     />
                 )}
             </Sidebar>
@@ -86,15 +86,11 @@ const Summary = ({ selectedFeature, system, type, selectFeature, setSearchFeatur
 }
 
 Summary.propTypes = {
-    selectedFeature: FeaturePropType,
+    selectedFeature: FeaturePropType.isRequired,
     type: PropTypes.string.isRequired,
     system: PropTypes.string.isRequired,
     selectFeature: PropTypes.func.isRequired,
     setSearchFeature: PropTypes.func.isRequired
-}
-
-Summary.defaultProps = {
-    selectedFeature: null
 }
 
 const mapStateToProps = globalState => {

@@ -10,7 +10,7 @@ import { FeaturePropType } from "../../../CustomPropTypes"
 import { recordsToGeoJSON } from "../../../utils/geojson"
 
 import { TILE_HOST } from "../../../config"
-import { SCENARIOS } from '../../../constants'
+import { SCENARIOS } from "../../../constants"
 import {
     maskFill,
     maskOutline,
@@ -56,7 +56,7 @@ class PriorityMap extends Component {
         const { scenario, summaryUnits, layer, selectedFeature, mode, filters, tierThreshold } = this.props
 
         // Only changes on select / deselect of a barrier
-        if (selectedFeature !== prevSelectedFeature) {
+        if (!selectedFeature.equals(prevSelectedFeature)) {
             this.updateBarrierHighlight()
         }
 
@@ -139,7 +139,7 @@ class PriorityMap extends Component {
         const { map } = this
         const { selectedFeature } = this.props
 
-        if (selectedFeature !== null) {
+        if (!selectedFeature.isEmpty()) {
             map.getSource("point-highlight").setData({
                 type: "Point",
                 coordinates: [selectedFeature.get("lon"), selectedFeature.get("lat")]
@@ -532,7 +532,7 @@ PriorityMap.propTypes = {
     type: PropTypes.string.isRequired,
     scenario: PropTypes.string,
     bounds: ImmutablePropTypes.listOf(PropTypes.number), // example: [-180, -86, 180, 86]
-    selectedFeature: FeaturePropType,
+    selectedFeature: FeaturePropType.isRequired,
     filters: ImmutablePropTypes.mapOf(
         ImmutablePropTypes.setOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number]))
     ).isRequired,
@@ -551,7 +551,6 @@ PriorityMap.propTypes = {
 PriorityMap.defaultProps = {
     scenario: null,
     bounds: null,
-    selectedFeature: null,
     layer: null
 }
 
@@ -603,7 +602,6 @@ export default connect(
 //         map.setFeatureState({source, sourceLayer, id: this.hoverId}, {hover: false})
 //     }
 // }
-
 
 // Show priority dams
 // map.addLayer({

@@ -47,7 +47,7 @@ class Map extends React.Component {
         this.map = map
         window.map = map
 
-        map.addControl(new mapboxgl.NavigationControl(), "top-right")
+        map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), "top-right")
 
         map.on("load", () => {
             this.map.resize() // force map to realign center

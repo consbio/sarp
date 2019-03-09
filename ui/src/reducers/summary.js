@@ -11,7 +11,7 @@ const initialState = Map({
     system: "HUC", // HUC, ECO, ADMIN. null means SARP region
     type: "dams", // dams, barriers
     searchFeature: Map(), // {id, layer, bbox, maxZoom=null}
-    selectedFeature: null // selected unit properties {id: <>, ...}
+    selectedFeature: Map() // selected unit properties {id: <>, ...}
 })
 
 export const reducer = (state = initialState, { type, payload = {} }) => {
@@ -22,11 +22,15 @@ export const reducer = (state = initialState, { type, payload = {} }) => {
         case SUMMARY_SET_SYSTEM: {
             return state.merge({
                 system: payload.system,
-                selectedFeature: null
+                searchFeature: Map(),
+                selectedFeature: Map()
             })
         }
         case SUMMARY_SET_TYPE: {
-            return state.set("type", payload.type)
+            return state.merge({
+                type: payload.type,
+                selectedFeature: Map()
+            })
         }
         case SUMMARY_SET_SEARCH_FEATURE: {
             return state.set("searchFeature", fromJS(payload.searchFeature).set("maxZoom", payload.maxZoom))

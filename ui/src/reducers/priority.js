@@ -19,15 +19,13 @@ import {
     PRIORITY_FETCH_ERROR,
     SET_TIER_THRESHOLD
 } from "../actions/priority"
-import { SARP_BOUNDS } from "../constants"
 
 const initialState = Map({
     mode: "start", // mode or step in selection process: "select", "filter", "results"
-    bounds: List(SARP_BOUNDS), // SARP bounds
-    prevBounds: List(), // push previous bounds here
     scenario: "ncwc", // nc, wc, ncwc
     layer: null, // HUC*, ECO*, State
     summaryUnits: Set(), // set of specific IDs from the summary unit layer
+    selectedFeature: Map(),
     type: null, // dams or barriers; not set until chosen by user
     rankData: List(),
     tierThreshold: 1, // 1-20, which tiers to include in top-ranked dams on map

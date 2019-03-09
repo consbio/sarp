@@ -51,12 +51,10 @@ class SummaryMap extends Component {
             }
         }
 
-        if (selectedFeature !== prevFeature) {
-            const featureId = selectedFeature === null ? null : selectedFeature.get("id")
+        if (!selectedFeature.equals(prevFeature)) {
+            const featureId = selectedFeature.get("id", null)
             visibleLayers.forEach(({ id }) => {
-                const featureIdForLyr = featureId
-
-                this.setHighlight(id, featureIdForLyr)
+                this.setHighlight(id, featureId)
             })
         }
 
@@ -84,7 +82,7 @@ class SummaryMap extends Component {
             })
         }
 
-        if (!searchFeature.equals(prevSearchFeature) && searchFeature.has("id")) {
+        if (!searchFeature.equals(prevSearchFeature) && !searchFeature.isEmpty()) {
             const { id = null, layer, bbox, maxZoom } = searchFeature.toJS()
 
             // if feature is already visible, select it
@@ -95,7 +93,7 @@ class SummaryMap extends Component {
                 })
             }
 
-            map.fitBounds(bbox, { padding: 10, maxZoom, duration: 500 })
+            map.fitBounds(bbox, { padding: 20, maxZoom, duration: 500 })
         }
     }
 
@@ -342,20 +340,15 @@ class SummaryMap extends Component {
 }
 
 SummaryMap.propTypes = {
-    bounds: ImmutablePropTypes.listOf(PropTypes.number), // example: [-180, -86, 180, 86]
+    bounds: ImmutablePropTypes.listOf(PropTypes.number).isRequired, // example: [-180, -86, 180, 86]
     system: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     searchFeature: SearchFeaturePropType.isRequired,
-    selectedFeature: FeaturePropType,
+    selectedFeature: FeaturePropType.isRequired,
 
     setSystem: PropTypes.func.isRequired,
     setType: PropTypes.func.isRequired,
     selectFeature: PropTypes.func.isRequired
-}
-
-SummaryMap.defaultProps = {
-    bounds: null,
-    selectedFeature: null
 }
 
 const mapStateToProps = globalState => {
