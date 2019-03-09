@@ -647,6 +647,10 @@ button.link.link-back {
     padding-left: 0 !important;
 }
 
+#SummaryUnitList {
+    margin-bottom: 2rem;
+}
+
 #SummaryUnitList li {
     line-height: 1.2;
     border-bottom: 1px solid #eee;

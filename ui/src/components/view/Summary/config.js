@@ -57,7 +57,7 @@ export const LAYER_CONFIG = [
         group: "HUC",
         minzoom: 6.5,
         maxzoom: 9,
-        title: "Hydrologic subbasin",
+        title: "Subbasin",
         bins: {
             dams: [10, 50, 100, 200, 250, 300, 400, 500, 5000],
             barriers: [25, 50, 100, 150, 1500]

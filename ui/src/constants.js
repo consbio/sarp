@@ -196,5 +196,15 @@ export const SCENARIOS = {
     ncwc: "Combined"
 }
 
+export const LAYER_NAMES = {
+    "State": "State",
+    "County": "County",
+    "HUC6": "Basin",
+    "HUC8": "Subbasin",
+    "HUC12": "Subwatershed",
+    "ECO3": "Level 3",
+    "ECO4": "Level 4"
+}
+
 // Bounds around all selected HUC6s
 export const SARP_BOUNDS = [-107.87000919, 17.62370026, -64.5126611, 44.26093852]

@@ -86,8 +86,9 @@ class SummaryMap extends Component {
             const { id = null, layer, bbox, maxZoom } = searchFeature.toJS()
 
             // if feature is already visible, select it
+            // otherwise, zoom and attempt to select it
             const feature = this.selectFeatureByID(id, layer)
-            if (feature === null) {
+            if (!feature) {
                 map.once("moveend", () => {
                     this.selectFeatureByID(id, layer)
                 })
@@ -101,13 +102,13 @@ class SummaryMap extends Component {
         const { map } = this
         const { selectFeature } = this.props
 
-        const features = map.querySourceFeatures("sarp", { sourceLayer: layer, filter: ["==", "id", id] })
+        const [feature] = map.querySourceFeatures("sarp", { sourceLayer: layer, filter: ["==", "id", id] })
 
-        if (features.length === 0) return null
-
-        const { properties } = features[0]
-        selectFeature(fromJS(properties).merge({ layerId: layer }))
-        return features[0]
+        if (feature !== undefined) {
+            selectFeature(fromJS(feature.properties).merge({ layerId: layer }))
+        }
+        return feature
+        
     }
 
     setLayerVisibility = (id, visible) => {
@@ -241,7 +242,6 @@ class SummaryMap extends Component {
             const layers = this.layers.map(({ id }) => `${id}-fill`)
             const features = map.queryRenderedFeatures(e.point, { layers })
             if (features.length === 0) return
-            console.log("click features", features)
 
             const { sourceLayer, properties } = features[0]
             selectFeature(fromJS(properties).merge({ layerId: sourceLayer }))

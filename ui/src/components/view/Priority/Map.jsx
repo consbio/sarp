@@ -6,7 +6,7 @@ import { connect } from "react-redux"
 
 import * as actions from "../../../actions/priority"
 import Legend from "./Legend"
-import { FeaturePropType } from "../../../CustomPropTypes"
+import { FeaturePropType, SearchFeaturePropType } from "../../../CustomPropTypes"
 import { recordsToGeoJSON } from "../../../utils/geojson"
 
 import { TILE_HOST } from "../../../config"
@@ -51,9 +51,19 @@ class PriorityMap extends Component {
             selectedFeature: prevSelectedFeature,
             mode: prevMode,
             filters: prevFilters,
-            tierThreshold: prevTierThreshold
+            tierThreshold: prevTierThreshold,
+            searchFeature: prevSearchFeature
         } = prevProps
-        const { scenario, summaryUnits, layer, selectedFeature, mode, filters, tierThreshold } = this.props
+        const {
+            scenario,
+            summaryUnits,
+            layer,
+            selectedFeature,
+            mode,
+            filters,
+            tierThreshold,
+            searchFeature
+        } = this.props
 
         // Only changes on select / deselect of a barrier
         if (!selectedFeature.equals(prevSelectedFeature)) {
@@ -122,6 +132,36 @@ class PriorityMap extends Component {
         if (mode === "filter" && filters !== prevFilters) {
             this.updateBarrierFilters()
         }
+
+        if (!searchFeature.equals(prevSearchFeature) && !searchFeature.isEmpty()) {
+            const { id = null, bbox } = searchFeature.toJS()
+
+            // if feature is already visible, select it
+            // otherwise, zoom and attempt to select it
+            const feature = this.selectUnitByID(id)
+            if (!feature) {
+                map.once("moveend", () => {
+                    this.selectUnitByID(id)
+                })
+            }
+            map.fitBounds(bbox, { padding: 20, duration: 500 })
+        }
+    }
+
+    selectUnitByID = id => {
+        const { map } = this
+        const { selectUnit, summaryUnits } = this.props
+
+        const [feature] = map.queryRenderedFeatures({ layers: ["unit-fill"], filter: ["==", "id", id] })
+        if (feature !== undefined) {
+            const { properties } = feature
+            if (!summaryUnits.map(u => u.get("id")).has(properties.id)) {
+                // only select it if it wasn't previously selected, otherwise
+                // we unexpectedly remove it
+                selectUnit(feature.properties)
+            }
+        }
+        return feature
     }
 
     updateUnitHighlight = () => {
@@ -384,7 +424,6 @@ class PriorityMap extends Component {
                     })
                     if (points.length > 0) {
                         const point = points[0]
-                        console.log(point)
                         selectFeature(
                             fromJS(point.properties).merge({ hasnetwork: point.layer.id !== "point-no-network" })
                         )
@@ -397,7 +436,6 @@ class PriorityMap extends Component {
                     })
                     if (points.length > 0) {
                         const point = points[0]
-                        console.log(point)
 
                         const properties = fromJS(point.properties).merge({
                             hasnetwork: point.layer.id !== "point-no-network"
@@ -409,7 +447,6 @@ class PriorityMap extends Component {
                                 sourceLayer: type,
                                 filter: ["==", "id", id]
                             })
-                            console.log("tilePoints", tilePoints)
                             if (tilePoints.length) {
                                 selectFeature(fromJS(tilePoints[0].properties).mergeDeep(properties))
                             }
@@ -498,11 +535,11 @@ class PriorityMap extends Component {
     }
 
     render() {
-        const { mode, scenario, setScenario, bounds } = this.props
+        const { mode, scenario, setScenario } = this.props
 
         return (
             <React.Fragment>
-                <Map baseStyle="streets-v9" bounds={bounds} onCreateMap={this.handleCreateMap} />
+                <Map baseStyle="streets-v9" onCreateMap={this.handleCreateMap} />
 
                 {mode === "results" ? (
                     <div id="SystemChooser" className="mapboxgl-ctrl-top-left flex-container flex-align-center">
@@ -533,6 +570,7 @@ PriorityMap.propTypes = {
     scenario: PropTypes.string,
     bounds: ImmutablePropTypes.listOf(PropTypes.number), // example: [-180, -86, 180, 86]
     selectedFeature: FeaturePropType.isRequired,
+    searchFeature: SearchFeaturePropType.isRequired,
     filters: ImmutablePropTypes.mapOf(
         ImmutablePropTypes.setOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number]))
     ).isRequired,
@@ -560,8 +598,8 @@ const mapStateToProps = globalState => {
 
     return {
         type: state.get("type"),
-        bounds: state.get("bounds"),
         selectedFeature: state.get("selectedFeature"),
+        searchFeature: state.get("searchFeature"),
         scenario: state.get("scenario"),
         summaryUnits: state.get("summaryUnits"),
         layer: state.get("layer"),

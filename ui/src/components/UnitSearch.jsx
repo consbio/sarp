@@ -1,7 +1,7 @@
 import React from "react"
 import PropTypes from "prop-types"
 
-import { SYSTEMS, SYSTEM_UNITS, STATE_FIPS } from "../constants"
+import { LAYER_NAMES, SYSTEMS, SYSTEM_UNITS, STATE_FIPS } from "../constants"
 import data from "../data/unit_bounds.json"
 
 // merge state name in
@@ -77,16 +77,7 @@ ListItem.defaultProps = {
 }
 
 const UnitSearch = ({ system, layer, value, onChange, onSelect }) => {
-    const showID = system !== "ADM"
-    // const [value, setValue] = useState(origValue)
-
-    // reset results on props change
-    // useEffect(
-    //     () => {
-    //         setValue("")
-    //     },
-    //     [system]
-    // )
+    const showID = layer ? !(layer === "State" || layer === "County") : system !== "ADM"
 
     const handleChange = ({ target: { value: inputValue } }) => {
         onChange(inputValue)
@@ -107,12 +98,21 @@ const UnitSearch = ({ system, layer, value, onChange, onSelect }) => {
         results = filtered.slice(0, 10)
     }
 
-    const searchLabel = `${SYSTEMS[system].toLowerCase()} name${system !== "ADM" ? " or ID" : ""}`
+    const searchLabel = layer ? LAYER_NAMES[layer] : SYSTEMS[system].toLowerCase()
+    const suffix = ` name${
+        (system && system !== "ADM") || (layer && !(layer === "State" || layer === "County")) ? " or ID" : ""
+    }`
 
     return (
         <div id="UnitSearch">
-            <h5 className="is-size-5">Search for {SYSTEMS[system].toLowerCase()}:</h5>
-            <input className="input" type="text" placeholder={searchLabel} value={value} onChange={handleChange} />
+            <h5 className="is-size-5">Search for {searchLabel}:</h5>
+            <input
+                className="input"
+                type="text"
+                placeholder={`${searchLabel}${suffix}`}
+                value={value}
+                onChange={handleChange}
+            />
             {value !== "" && (
                 <>
                     {results.length > 0 ? (
@@ -134,16 +134,16 @@ const UnitSearch = ({ system, layer, value, onChange, onSelect }) => {
 
 UnitSearch.propTypes = {
     value: PropTypes.string.isRequired,
-    system: PropTypes.string.isRequired,
+    system: PropTypes.string,
     layer: PropTypes.string,
+
     onChange: PropTypes.func.isRequired,
     onSelect: PropTypes.func.isRequired
 }
 
 UnitSearch.defaultProps = {
+    system: null,
     layer: null
-    // value: "",
-    // onSelect: () => {}
 }
 
 export default UnitSearch
