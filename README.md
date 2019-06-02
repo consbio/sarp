@@ -1,5 +1,11 @@
 # Southeast Aquatic Barriers Inventory Visualization & Prioritization Tool
 
+## NOTE
+
+This repository is ARCHIVED as of 4/22/2019 and reflects the final development completed by the Conservation Biology Institute.
+
+Future development is continued at: https://github.com/astutespruce/sarp-connectivity
+
 ## Data processing
 
 Data processing steps are detailed in `/data/README.md`.
